@@ -1,0 +1,25 @@
+# Copyright 2019
+# CUPiONE rule definition for InFusion
+# 18-12-2019
+
+define
+
+## Rule 1 ##
+
+appointment-provider sub entity, #extends
+	plays health-service-provider;
+
+health-service-provision sub entity,
+	plays provided-health-service; #extends
+
+provision sub relation,  # new relation
+	relates health-service-provider,
+	relates provided-health-service;
+
+
+referral-centre-provides-health-service sub rule,
+when {
+    (reserved-health-service: $hs, referring-centre: $rc) isa reservation;
+}, then {
+    (health-service-provider: $rc, provided-health-service:$hs) isa provision;
+};

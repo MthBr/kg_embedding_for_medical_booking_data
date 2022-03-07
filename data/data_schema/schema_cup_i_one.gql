@@ -1,0 +1,205 @@
+# Copyright 2019
+# 02-12-2019
+
+define
+
+################
+## ATTRIBITES ##
+################
+
+
+## general attributes ##
+sa_asl  sub attribute, # sa_asl: local-health-department-id
+	datatype string,
+	regex "^(A|B|C)$";
+
+## Patient related ##
+sa_eta_id sub attribute, # sa_eta_id
+	datatype long;
+sa_sesso_id sub attribute, # sa_sesso_id
+	datatype long;
+sa_ass_cf sub attribute,  #sa_ass_cf: nin-id,  national insurance number
+	datatype string;
+istat-comune-id sub attribute, # sa_comune_id: postal-code  NUTS istat https://www4.istat.it/it/strumenti/definizioni-e-classificazioni
+#Codici statistici delle unità amministrative territoriali   https://www4.istat.it/it/archivio/6789
+	datatype long;
+
+## medico-prescrittore and booking saff related ##
+sa_med_id sub attribute,  #sa_med_id: sa_med_id, unique-id
+	datatype long;
+
+sa_utente_id sub attribute, #sa_utente_id AND sa_ut_id
+	datatype string;
+
+
+
+
+
+## impegnativa related ##
+sa_classe_priorita sub attribute,  #sa_classe_priorita
+	datatype string;
+sa_ese_id_lk sub attribute,  #sa_ese_id_lk
+	datatype string;
+sa_impegnativa_id sub attribute, #sa_impegnativa_id
+	datatype long;
+indx_impegnativa sub attribute, #indx_impegnativa
+	datatype long;
+
+
+## prescription and medical branch related ##
+sa_pre_id sub attribute, #sa_pre_id: sa_pre_id -   codice della prestazione
+	datatype string;
+sa_branca_id sub attribute, #sa_branca_id :  branca impegantiva
+	datatype string;
+indx_prestazione sub attribute, #sa_pre_id: sa_pre_id -   codice della prestazione
+	datatype string;
+indx_branca sub attribute, #indx_branca
+	datatype string;
+descrizione-prestazione sub attribute,  # descrizione @ prestazioni
+	datatype string;
+descrizione-branca sub attribute, # descrizione @ branche
+	datatype string;
+descrizione-ufficiale sub attribute, # descrizione @ branche
+	datatype string;
+sa_num_prestazioni sub attribute, # sa_num_prestazioni: quantità della prestazione SA_PRE_ID
+	datatype string;
+
+
+## impegnativa centre related ##
+sa_uop_codice_id sub attribute, #sa_uop_codice_id
+	datatype string;
+#TODO
+# "unita_erogante_descrizione"
+# "erogatore_codice" # "erogatore_indirizzo"
+# "ambulatorio_codice"  "ambulatorio_descrizione" "ambulatorio_indirizzo"
+# "struttura_codice"  "struttura_descrizione"  "struttura_indirizzo"  "struttura_comune" "struttura_quartiere" "struttura_distretto"  "struttura_asl"  "struttura_codasl" "struttura_codice_regionale"  "struttura_codice_istat"
+# struttura_comune è come sa_comune_id
+
+
+
+## prenotazione related ##
+sa_is_ad sub attribute,	#sa_is_ad
+	datatype string;
+
+sa_dti_id sub attribute, #sa_dti_id     appointment-id,
+	datatype long;
+
+data sub attribute,
+	abstract,
+	datatype date;
+sa_data_ins  sub data;  #sa_data_ins:  reservation-change-date insert-date
+sa_data_pren  sub data; #sa_data_pren: reservation-change-date  insert-date
+sa_data_app sub data;  #sa_data_app @ cup   OR   sa_data_prest @ CASSA:   sa_data_app -  appointment-date
+sa_data_prescr sub data; # sa_data_prescr: data sulla ricetta/impegnativa, quella che mette il medico
+sa_data_ins-pagamento sub data; #sa_data_ins @ CASSA: ledger-entry-date
+sa_data_mov sub data;  # sa_data_mov : sa_data_ins-pagamento, sa_data_mov, payment-date, money-date
+
+
+
+
+################
+## ENTITIES ##
+################
+
+assistito sub entity,
+	has sa_ass_cf, #has age,
+	has sa_sesso_id,
+	# has sa_asl,
+	has istat-comune-id,
+	plays assistito-indicato; #  referred patient
+
+medico-prescrittore sub entity,
+	has sa_med_id,   # key unique-id,
+	# has sa_asl,
+	plays prescrivente; # or referee A person who refers anothe  -- referent  noun of refers
+
+# administrative staff  *-* Front Desk staff *-* 	Receptionist
+operatore-utente sub entity,  #TODO rivedere nomenclatura per utente_id, ut_id  booking-service sub
+# operatore-utente , booking-agent
+	has sa_utente_id,
+	has sa_asl,
+	plays operatore-che-prenota,
+#	plays operatore-che-elimina,
+	plays operatore-che-aggiorna;
+
+
+
+branca sub entity,
+	has sa_branca_id,
+	has indx_branca,
+	has descrizione-branca,
+	has descrizione-ufficiale,
+	plays branca-indicata;
+
+prestazione sub entity,
+	has sa_pre_id, #health-service-id
+	has indx_prestazione,
+	has indx_branca,
+	has descrizione-prestazione,
+	plays prestazione-prenotata,
+ 	plays prestazione-prescritta; #referred-prescription
+ #	has outpatient-care # does not invole hospital care (like lab tretments.. a.k.a. ambulatory care
+
+
+#impegnativa centre: unit that delivers the appointment, dispenser[provider]
+
+UOP sub entity, #TODO insert and transalte UOP
+	has sa_uop_codice_id,
+	has istat-comune-id,
+	has sa_asl,
+	plays erogatore-ambulatorio;
+
+
+# asl sub entity,
+# 	key unique-id,
+# 	has description,
+# 	has position;
+
+
+
+
+
+	################
+	## RELATIONS ##
+	################
+
+# Try using this sentence to formulate the structure of a relation:
+# A <relation> has a <role> in the form of a <subject> (<subject> is any concept, which could be an entity, relation, or attribute)
+# For example: a route has a stop in the form of a station
+
+prenotazione sub relation, #booking
+	has sa_dti_id,
+	has sa_data_app,
+	has sa_data_pren,
+	has sa_data_ins,
+	has sa_is_ad,
+	has sa_num_prestazioni,  # number-of-prescriptions  number-of-health-services
+	relates operatore-che-aggiorna,
+	relates operatore-che-prenota,
+	relates prestazione-prenotata,
+	relates erogatore-ambulatorio,
+	relates appuntamento;
+
+#relates erogatore-ambulatorio,   # ??uop? referring centre.   Hospital is health centre serves as a impegnativa centre
+
+
+#health-service-amount
+
+
+
+impegnativa sub relation,
+ #TODO # has quesito diagnostico...
+	has sa_impegnativa_id,
+	has indx_impegnativa,  #TODO
+	has sa_data_prescr,
+	has sa_eta_id,
+	has sa_classe_priorita,
+	#has sa_asl,
+	#has sa_branca_id,
+	#has sa_pre_id,
+	has sa_ese_id_lk,
+	plays appuntamento,
+	relates branca-indicata,  # or prescribed-medical-branch
+	relates prestazione-prescritta,   #what si referred: prescription - impegnativa recipient doctor/exam
+	relates assistito-indicato, # referred assistito the impegnativa - referred?
+	relates prescrivente; # medico-prescrittore - referring doctor - prescriber - referring physician

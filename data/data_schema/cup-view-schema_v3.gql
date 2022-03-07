@@ -1,0 +1,204 @@
+# Copyright 2019
+# CUPiONE basic schema for InFusion
+# 02-12-2019
+
+define
+
+################
+## ATTRIBITES ##
+################
+
+
+## general attributes ##
+local-health-department-id  sub attribute, # sa_asl: local-health-department-id
+	datatype string,
+	regex "^(A|B|C)$";
+
+## Patient related ##
+patient-age sub attribute, # sa_eta_id
+	datatype long;
+gender sub attribute, # sa_sesso_id
+	datatype long;
+encrypted-nin-id sub attribute,  #sa_ass_cf: nin-id,  national insurance number
+	datatype string;
+nuts-istat-code sub attribute, # sa_comune_id: postal-code  NUTS istat https://www4.istat.it/it/strumenti/definizioni-e-classificazioni
+#Codici statistici delle unità amministrative territoriali   https://www4.istat.it/it/archivio/6789
+	datatype long;
+
+## practitioner and booking saff related ##
+practitioner-id sub attribute,  #sa_med_id: practitioner-id, unique-id
+	datatype long;
+
+booking-agent-id sub attribute, #sa_utente_id AND sa_ut_id
+	datatype long; #TODO: long
+
+
+
+
+
+## referral related ##
+priority-code sub attribute,  #sa_classe_priorita
+	datatype string;
+exemption-code sub attribute,  #sa_ese_id_lk
+	datatype string;
+referral-id sub attribute, #sa_impegnativa_id
+	datatype long;
+referral-modified-id sub attribute, #indx_impegnativa
+	datatype long;
+
+
+## prescription and medical branch related ##
+health-service-id sub attribute, #sa_pre_id: health-service-id -   codice della prestazione
+	datatype string;
+medical-branch-id sub attribute, #sa_branca_id :  branca impegantiva
+	datatype string;
+refined-health-service-id sub attribute, #indx_prestazione: health-service-id -   codice della prestazione
+	datatype long;
+refined-medical-branch-id sub attribute, #indx_branca
+	datatype long;
+health-service-description sub attribute,  # descrizione @ prestazioni
+	datatype string;
+branch-description sub attribute, # descrizione @ branche
+	datatype string;
+official-branch-description sub attribute, # descrizione @ branche
+	datatype string;
+number-of-health-services sub attribute, # sa_num_prestazioni: quantità della prestazione SA_PRE_ID
+	datatype long;
+
+
+## referral centre related ##
+referral-centre-id sub attribute, #sa_uop_codice_id
+	datatype string;
+#TODO
+# "unita_erogante_descrizione"
+# "erogatore_codice" # "erogatore_indirizzo"
+# "ambulatorio_codice"  "ambulatorio_descrizione" "ambulatorio_indirizzo"
+# "struttura_codice"  "struttura_descrizione"  "struttura_indirizzo"  "struttura_comune" "struttura_quartiere" "struttura_distretto"  "struttura_asl"  "struttura_codasl" "struttura_codice_regionale"  "struttura_codice_istat"
+# struttura_comune è come sa_comune_id
+
+
+
+## reservation related ##
+booking-type sub attribute,	#sa_is_ad
+	datatype string;
+
+appointment-encoding sub attribute, #sa_dti_id     appointment-id,
+	datatype string;
+
+event-date sub attribute,
+	abstract,
+	datatype date;
+last-reservation-change-date  sub event-date;  #sa_data_ins:  reservation-change-date insert-date
+reservation-date  sub event-date; #sa_data_pren: reservation-change-date  insert-date
+booked-date sub event-date;  #sa_data_app @ cup   OR   sa_data_prest @ CASSA:   booked-date -  appointment-date
+referral-date sub event-date; # sa_data_prescr: data sulla ricetta/impegnativa, quella che mette il medico
+
+
+
+
+################
+## ENTITIES ##
+################
+
+patient sub entity,
+	has encrypted-nin-id, #has age,
+	has gender,
+	# has local-health-department-id,
+	has nuts-istat-code,
+	plays referred-patient; #  referred patient
+
+practitioner sub entity,
+	has practitioner-id,   # key unique-id,
+	# has local-health-department-id,
+	plays referrer; # or referee A person who refers anothe  -- referent  noun of refers
+
+# administrative staff  *-* Front Desk staff *-* 	Receptionist
+booking-staff sub entity,  #TODO rivedere nomenclatura per utente_id, ut_id  booking-service sub
+# booking-staff , booking-agent
+	has booking-agent-id,
+	has local-health-department-id,
+	plays booking-agent,
+#	plays deleting-agent,
+	plays updating-agent;
+
+
+
+medical-branch sub entity,
+	has medical-branch-id,
+	has refined-medical-branch-id,
+	has branch-description,
+	has official-branch-description,
+	plays referred-medical-branch;
+
+health-service-provision sub entity,
+	has health-service-id, #health-service-id
+	has refined-health-service-id,
+	has refined-medical-branch-id,
+	has health-service-description,
+	plays reserved-health-service,
+ 	plays prescribed-health-service; #referred-prescription
+ #	has outpatient-care # does not invole hospital care (like lab tretments.. a.k.a. ambulatory care
+
+
+#referral centre: unit that delivers the appointment, dispenser[provider]
+
+appointment-provider sub entity, #TODO insert and transalte UOP
+	has referral-centre-id,
+	has nuts-istat-code,
+	has local-health-department-id,
+	plays referring-centre;
+
+
+# asl sub entity,
+# 	key unique-id,
+# 	has description,
+# 	has position;
+
+
+
+
+
+	################
+	## RELATIONS ##
+	################
+
+# Try using this sentence to formulate the structure of a relation:
+# A <relation> has a <role> in the form of a <subject> (<subject> is any concept, which could be an entity, relation, or attribute)
+# For example: a route has a stop in the form of a station
+
+reservation sub relation, #booking
+	has appointment-encoding,
+	has booked-date,
+	has reservation-date,
+	has last-reservation-change-date,
+	has booking-type,
+	has number-of-health-services,  # number-of-prescriptions  number-of-health-services
+	relates updating-agent,
+	relates booking-agent,
+	relates reserved-health-service,
+	relates referring-centre,
+	relates booked-referral;
+
+#relates referring-centre,   # ??uop? referring centre.   Hospital is health centre serves as a referral centre
+
+
+#health-service-amount
+
+
+
+referral sub relation,
+ #TODO # has quesito diagnostico...
+	has referral-id,
+	has referral-modified-id,  #TODO
+	has referral-date,
+	has patient-age,
+	has priority-code,
+	#has local-health-department-id,
+	#has medical-branch-id,
+	#has health-service-id,
+	has exemption-code,
+	plays booked-referral,
+	relates referred-medical-branch,  # or prescribed-medical-branch
+	relates prescribed-health-service,   #what si referred: prescription - referral recipient doctor/exam
+	relates referred-patient, # referred patient the referral - referred?
+	relates referrer; # practitioner - referring doctor - prescriber - referring physician

@@ -1,0 +1,181 @@
+\documentclass{article}
+\usepackage{booktabs}
+%\usepackage{graphicx,wrapfig}
+%\usepackage{float}
+\makeatother
+\DeclareTextFontCommand{\htexttt}{\ttfamily\hyphenchar\font=45\relax}
+
+\begin{document}
+
+\section{Data}
+\noindent
+In the following, some details about the dataset.\\
+
+The description of the main columns in the Table \ref{table:dwh_mis_cup}.
+%Other fields, used in other service procedures, in this context can be ignored. 
+%TODO review table    
+\begin{table*}%[!t]
+	% increase table row spacing, adjust to taste
+	\renewcommand{\arraystretch}{1.0}
+	% if using array.sty, it might be a good idea to tweak the value of
+	% \extrarowheight as needed to properly center the text within the cells
+	\centering
+	% Some packages, such as MDW tools, offer better commands for making tables
+	% than the plain LaTeX2e tabular which is used here.
+	\begin{tabular}{p{0.32\linewidth}p{0.07\linewidth}p{0.67\linewidth}} %lcl
+	\hline
+	Field-Name & Type & Explanation\\
+	\hline
+	\htexttt{booked-date} & \texttt{date} & date of the booked appointment\\		
+	\htexttt{reservation-date} & \texttt{date} & date of the first contact with the booking staff, is also the date of the insertion of the record in the database.\\	
+	\htexttt{last-reservation-change-date} & \texttt{date} & last update of the reservation, which usually matches the \htexttt{reservation-date}\\	
+	
+	\htexttt{encrypted-nin-id} & \texttt{str} & encrypted national insurance number. Used as a non-decriptable  numeric ID of the patient, special value $-1$ represents undefined patients\\
+	\htexttt{gender} & \texttt{long} & $1$ for male, $2$ for female, $-1$ undefined (for anonymous patients)\\
+	\htexttt{patient-age} & \texttt{long} & age of the patient at the time of the issue of the referral, special value $-1$ is for anonymous patients\\		
+	\htexttt{nuts-istat-code} & \texttt{long} & Italian nuts code, it identifies local administrative areas, it can be linked to postal codes\\		
+		
+	\htexttt{booking-agent-id} & \texttt{long} & anonimized numeric ID of the booking agent\\
+
+	\htexttt{medical-branch-id} & \texttt{str} & alphanumeric string that contains a code of the medical branch\\
+
+	\htexttt{health-service-id} & \texttt{str} & alphanumeric ID of the health service\\
+	\htexttt{practitioner-id} & \texttt{long} & anonimized numerical identifier of the prescriber, special value $-1$ is for undefined practitioners\\
+
+	\htexttt{referral-centre-id} & \texttt{str} & identification of the unit that delivers the appointment. It is the concatenation of the \emph{dispenser} and the \emph{ambulatory}, separated by the hyphen\\
+
+	\htexttt{appointment-encoding} & \texttt{str} & concatenation of \htexttt{local-health-department-id} and the appointment codification\\		
+
+	\htexttt{booking-type} & \texttt{str} & Numeric value: $1$ is for direct check-in (e.g. from a hospital during a recovery), $0$ is for the conventional booking reservation\\	
+
+	\htexttt{referral-id} & \texttt{long} & anonimized numeric ID of the referral\\	
+	\htexttt{referral-date} & \texttt{date} & the date of the issue of the referral from the practitioner to the patient\\	
+	\htexttt{priority-code} & \texttt{str} & the code of the priority of the referral\\	
+	\htexttt{exemption-code} & \texttt{str} & the code of the exemption with respect to the patient and the health service\\	
+	
+	\htexttt{number-of-health-services} & \texttt{long} & number of needed \htexttt{health-service-id}s, rarely greater than $1$\\		\htexttt{status} & \texttt{str} & status of the appointment: \texttt{P}: booked; \texttt{A}: canceled\\	
+	\htexttt{local-health-department-id} & \texttt{long} & sub-regional local health department. In our data set there are three departments, identified with \texttt{A}, \texttt{B} and \texttt{C}\\
+	\hline		
+	\end{tabular}
+	\caption{Data set features. The table contains the description of the main columns of the local health department booking center}
+	\label{table:dwh_mis_cup}
+\end{table*}
+
+
+\section{Embedding}
+Some basic information of our final dataset to remark is certainly the number of triples $1\,558\,700$, that depends on the number of single instances reported in Tables~\ref{table:hasRel},~\ref{table:rel},~\ref{table:entity}. %$1~558~700$
+\begin{table}[]
+\centering
+\begin{tabular}{lr}
+\toprule
+                   @has-relations &  Number of instances \\
+\midrule
+                 @has-booked-date &             149198 \\
+            @has-reservation-date &             122744 \\
+   @has-number-of-health-services &             122744 \\
+        @has-appointment-encoding &             122744 \\
+                @has-booking-type &             122744 \\
+                 @has-referral-id &              31679 \\
+        @has-referral-modified-id &              31679 \\
+                 @has-patient-age &              31679 \\
+               @has-referral-date &              30630 \\
+              @has-exemption-code &              21545 \\
+               @has-priority-code &              10958 \\
+             @has-nuts-istat-code &               3584 \\
+  @has-local-health-department-id &               2907 \\
+             @has-practitioner-id &               1991 \\
+          @has-referral-centre-id &               1837 \\
+            @has-encrypted-nin-id &               1747 \\
+                      @has-gender &               1747 \\
+   @has-refined-medical-branch-id &               1337 \\
+           @has-health-service-id &               1316 \\
+            @has-booking-agent-id &               1070 \\
+  @has-health-service-description &               1023 \\
+   @has-refined-health-service-id &               1023 \\
+ @has-official-branch-description &                131 \\
+           @has-medical-branch-id &                131 \\
+          @has-branch-description &                131 \\
+\bottomrule
+\end{tabular}
+\caption{Number of instances in the @has type relations,, those a re the ones that express a property of either an entity or a relation (i.e. hyper-relation)}
+\label{table:hasRel}
+\end{table}
+\noindent
+%Second Table
+\begin{table}[]
+\centering
+\begin{tabular}{lr}
+\toprule
+       relation-entity links &  Number of instances \\
+\midrule
+   reserved-health-service &             122744 \\
+            updating-agent &             122744 \\
+           booked-referral &             122744 \\
+             booking-agent &             122744 \\
+          referring-centre &              84673 \\
+                  referrer &              31679 \\
+ prescribed-health-service &              31679 \\
+   referred-medical-branch &              31679 \\
+          referred-patient &              31679 \\
+             cure-provider &               9537 \\
+             cured-patient &               9537 \\
+   provided-health-service &               9471 \\
+   health-service-provider &               9471 \\
+\bottomrule
+\end{tabular}
+\caption{Number of instances of relation kind.}
+\label{table:rel}
+\end{table}
+\noindent
+%Third Table
+\begin{table}[]
+\centering
+\begin{tabular}{lr}
+\toprule
+ entities and meta-relations &  Number of instances \\
+\midrule
+         reservation &           122744 \\
+            referral &            31679 \\
+         health-care &             9537 \\
+           provision &             9471 \\
+        practitioner &             1991 \\
+appointment-provider &             1837 \\
+             patient &             1747 \\
+       booking-staff &             1070 \\
+      medical-branch &             1023 \\
+\bottomrule
+\end{tabular}
+\caption{Number of instances of entity kind.}
+\label{table:entity}
+\end{table}
+\noindent
+
+\section{KG prediction data}
+
+Table~\ref{tab:prediction} reports all value for, all the $9$ selected clusters of health services, among the initial $13$ clusters.
+\begin{table}
+	\centering	
+	\begin{tabular}{\textwidth}{lccccccccc}
+		\toprule
+		{} & Nearest Neighbors &    Linear SVM &       RBF SVM & Gaussian Process & Random Forest &    Neural Network &   Naive Bayes &           QDA &       XGBoost \\
+		Cluster &                   &               &               &                  &               &               &               &               &               \\
+		\midrule
+		10      &      0.59 $\pm$ 0.024 &  \textbf{0.67 $\pm$ 0.027} &  0.58 $\pm$ 0.025 &      \textbf{0.67 $\pm$ 0.03} &  0.62 $\pm$ 0.024 &  0.64 $\pm$ 0.028 &  0.65 $\pm$ 0.027 &   0.63 $\pm$ 0.02 &  0.65 $\pm$ 0.022 \\
+		5       &      0.51 $\pm$ 0.056 &  0.58 $\pm$ 0.065 &  0.54 $\pm$ 0.079 &      0.6 $\pm$ 0.093 &  0.57 $\pm$ 0.071 &  0.56 $\pm$ 0.075 &  \textbf{0.64 $\pm$ 0.082} &  0.52 $\pm$ 0.098 &   0.5 $\pm$ 0.079 \\
+		4       &      0.54 $\pm$ 0.037 &  0.58 $\pm$ 0.045 &  0.55 $\pm$ 0.042 &     \textbf{0.65 $\pm$ 0.045} &  0.58 $\pm$ 0.046 &   0.6 $\pm$ 0.051 &  0.63 $\pm$ 0.035 &  0.51 $\pm$ 0.051 &  0.57 $\pm$ 0.041 \\
+		2       &      0.51 $\pm$ 0.029 &  0.54 $\pm$ 0.028 &  0.52 $\pm$ 0.036 &     0.56 $\pm$ 0.037 &   0.53 $\pm$ 0.05 &  \textbf{0.59 $\pm$ 0.031} &  0.56 $\pm$ 0.036 &  0.49 $\pm$ 0.048 &  0.57 $\pm$ 0.031 \\
+		1       &      0.54 $\pm$ 0.031 &   0.6 $\pm$ 0.044 &   0.6 $\pm$ 0.034 &     0.59 $\pm$ 0.041 &   0.6 $\pm$ 0.037 &  \textbf{0.62 $\pm$ 0.044} &  0.61 $\pm$ 0.036 &   0.5 $\pm$ 0.055 &  \textbf{0.62 $\pm$ 0.033} \\
+		7       &      0.59 $\pm$ 0.022 &  \textbf{0.67 $\pm$ 0.021} &  0.57 $\pm$ 0.021 &     0.66 $\pm$ 0.025 &  0.62 $\pm$ 0.021 &  0.62 $\pm$ 0.024 &  0.65 $\pm$ 0.022 &  0.58 $\pm$ 0.022 &  0.62 $\pm$ 0.021 \\
+		6       &      0.57 $\pm$ 0.031 &  0.69 $\pm$ 0.025 &  0.59 $\pm$ 0.028 &     0.71 $\pm$ 0.028 &  0.69 $\pm$ 0.027 &  0.67 $\pm$ 0.022 &  \textbf{0.72 $\pm$ 0.024} &  0.54 $\pm$ 0.026 &  0.71 $\pm$ 0.026 \\
+		11      &       0.52 $\pm$ 0.04 &  0.65 $\pm$ 0.049 &  0.62 $\pm$ 0.038 &     0.68 $\pm$ 0.068 &  0.68 $\pm$ 0.046 &  0.69 $\pm$ 0.055 &  \textbf{0.73 $\pm$ 0.052} &  0.52 $\pm$ 0.044 &  0.69 $\pm$ 0.052 \\
+		13      &       0.59 $\pm$ 0.02 & \textbf{ 0.65 $\pm$ 0.026} &  0.57 $\pm$ 0.025 &     0.64 $\pm$ 0.041 &  0.62 $\pm$ 0.027 &  0.64 $\pm$ 0.028 &  0.64 $\pm$ 0.025 &  0.62 $\pm$ 0.022 &  0.64 $\pm$ 0.021 \\
+		\midrule
+		MEAN    &      0.55 $\pm$ 0.034 &  0.63 $\pm$ 0.052 &  0.57 $\pm$ 0.031 &     0.64 $\pm$ 0.048 &  0.61 $\pm$ 0.051 &   0.63 $\pm$ 0.04 &  \textbf{0.65 $\pm$ 0.052} &  0.55 $\pm$ 0.052 &  0.62 $\pm$ 0.065 \\
+		\bottomrule
+	\end{tabularx}
+  \caption{AUC values of every classification techniques, repeated 30 times, for every selected cluster written  in the form of (mean $ \pm $ std). In the last row the means values of every classification techniques. Bolded values are the best values for every row.}
+\label{tab:prediction}
+\end{table}
+
+
+\end{document}

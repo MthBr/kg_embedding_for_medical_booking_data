@@ -1,0 +1,98 @@
+--------- Loss ---------
+INFO - Name : nll
+INFO - eta : 5
+INFO - 
+------ Regularizer -----
+INFO - Name : LP
+INFO - lambda : 0.001
+INFO - p : 3
+INFO - 
+------ Optimizer -----
+INFO - Name : adam
+INFO - lr : 0.002955916726780434
+INFO - 
+------ Initializer -----
+INFO - Name : xavier
+INFO - uniform : False
+INFO - Removing 0 triples containing unseen entities. 
+INFO - Removing 0 triples containing unseen entities. 
+INFO - mr: 3382.0 mrr: 0.5005454714097326 hits 1: 0.5 hits 3: 0.5 hits 10: 0.5, model: ComplEx, params: {'batches_count': 64, 'seed': 0, 'epochs': 100, 'k': 100, 'eta': 5, 'loss': 'nll', 'loss_params': {}, 'embedding_model_params': {'negative_corruption_entities': 'all'}, 'regularizer': 'LP', 'regularizer_params': {'p': 3, 'lambda': 0.001}, 'optimizer': 'adam', 'optimizer_params': {'lr': 0.002955916726780434}, 'verbose': True}
+
+--------- Loss ---------
+INFO - Name : pairwise
+INFO - eta : 10
+INFO - margin : 2
+INFO - 
+------ Optimizer -----
+INFO - Name : adam
+INFO - lr : 0.008777401928634248
+INFO - 
+------ Initializer -----
+INFO - Name : xavier
+INFO - uniform : False
+INFO - Early stopping at epoch:140
+INFO - Best mrr:   0.062502
+INFO - Removing 0 triples containing unseen entities. 
+INFO - Removing 0 triples containing unseen entities. 
+INFO - mr: 37154.25 mrr: 0.5000071400488597 hits 1: 0.5 hits 3: 0.5 hits 10: 0.5, model: ComplEx, params: {'batches_count': 64, 'seed': 0, 'epochs': 250, 'k': 100, 'eta': 10, 'loss': 'pairwise', 'loss_params': {'margin': 2}, 'embedding_model_params': {'negative_corruption_entities': 'all'}, 'regularizer': None, 'regularizer_params': {}, 'optimizer': 'adam', 'optimizer_params': {'lr': 0.008777401928634248}, 'verbose': True}
+
+--------- Loss ---------
+INFO - Name : multiclass_nll
+INFO - eta : 10
+INFO - 
+------ Optimizer -----
+INFO - Name : adam
+INFO - lr : 0.004640179221509001
+INFO - 
+------ Initializer -----
+INFO - Name : xavier
+INFO - uniform : False
+INFO - Early stopping at epoch:160
+INFO - Best mrr:   0.166671
+INFO - Removing 0 triples containing unseen entities. 
+INFO - Removing 0 triples containing unseen entities. 
+INFO - mr: 9312.5 mrr: 0.5001825403596107 hits 1: 0.5 hits 3: 0.5 hits 10: 0.5, model: ComplEx, params: {'batches_count': 64, 'seed': 1, 'epochs': 250, 'k': 100, 'eta': 10, 'loss': 'multiclass_nll', 'loss_params': {}, 'embedding_model_params': {'negative_corruption_entities': 'all'}, 'regularizer': None, 'regularizer_params': {}, 'optimizer': 'adam', 'optimizer_params': {'lr': 0.004640179221509001}, 'verbose': True}
+
+--------- Loss ---------
+INFO - Name : nll
+INFO - eta : 5
+INFO - 
+------ Regularizer -----
+INFO - Name : LP
+INFO - lambda : 1e-05
+INFO - p : 1
+INFO - 
+------ Optimizer -----
+INFO - Name : adam
+INFO - lr : 0.0024542917011364847
+INFO - 
+------ Initializer -----
+INFO - Name : xavier
+INFO - uniform : False
+INFO - Early stopping at epoch:210
+INFO - Best mrr:   0.055562
+INFO - Removing 0 triples containing unseen entities. 
+INFO - Removing 0 triples containing unseen entities. 
+INFO - mr: 651.75 mrr: 0.5005938507608585 hits 1: 0.5 hits 3: 0.5 hits 10: 0.5, model: ComplEx, params: {'batches_count': 64, 'seed': 1, 'epochs': 250, 'k': 100, 'eta': 5, 'loss': 'nll', 'loss_params': {}, 'embedding_model_params': {'negative_corruption_entities': 'all'}, 'regularizer': 'LP', 'regularizer_params': {'p': 1, 'lambda': 1e-05}, 'optimizer': 'adam', 'optimizer_params': {'lr': 0.0024542917011364847}, 'verbose': True}
+
+--------- Loss ---------
+INFO - Name : multiclass_nll
+INFO - eta : 15
+INFO - 
+------ Regularizer -----
+INFO - Name : LP
+INFO - lambda : 0.1
+INFO - p : 3
+INFO - 
+------ Optimizer -----
+INFO - Name : adam
+INFO - lr : 0.009912302344646517
+INFO - 
+------ Initializer -----
+INFO - Name : xavier
+INFO - uniform : False
+INFO - Removing 0 triples containing unseen entities. 
+INFO - Removing 0 triples containing unseen entities. 
+INFO - mr: 328.75 mrr: 0.5022928890751607 hits 1: 0.5 hits 3: 0.5 hits 10: 0.5, model: ComplEx, params: {'batches_count': 64, 'seed': 0, 'epochs': 20, 'k': 100, 'eta': 15, 'loss': 'multiclass_nll', 'loss_params': {}, 'embedding_model_params': {'negative_corruption_entities': 'all'}, 'regularizer': 'LP', 'regularizer_params': {'p': 3, 'lambda': 0.1}, 'optimizer': 'adam', 'optimizer_params': {'lr': 0.009912302344646517}, 'verbose': True}
+
+

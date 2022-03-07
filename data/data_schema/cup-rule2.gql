@@ -1,0 +1,37 @@
+# Copyright 2019
+# 18-12-2019
+
+define
+
+## Rule 2 ##
+
+
+appointment-provider sub entity, #extends
+	plays cure-provider;
+
+patient sub entity,
+	plays cured-patient; #  referred patient
+
+
+health-care sub relation,  # new relation
+	has booked-date,
+	relates cured-patient,
+	relates cure-provider;
+
+patient-is-cured-at-health-care-provider sub rule,
+when {
+    (booked-referral: $ref, referring-centre: $hcp) isa reservation, has booked-date $bdate;
+	$ref (referred-patient: $p) isa referral;
+}, then {
+    (cure-provider: $hcp, cured-patient:$p) isa health-care;
+};
+
+
+patient-is-cured-at-health-care-provider-at-booked-date sub rule,
+when {
+    (booked-referral: $ref, referring-centre: $hcp) isa reservation, has booked-date $bdate;
+	$ref (referred-patient: $p) isa referral;
+	$hc (cure-provider: $hcp, cured-patient:$p) isa health-care;
+}, then {
+	$hc has booked-date $bdate;
+};

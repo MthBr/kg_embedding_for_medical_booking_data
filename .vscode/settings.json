@@ -1,0 +1,42 @@
+{
+    "python.pythonPath": "/home/enzo/miniconda3/envs/kg-env/bin/python",
+    "restructuredtext.confPath": "",
+    "grammarly.overrides": [
+        {
+            "files": [
+                "**/data/README.md"
+            ],
+            "config": {
+                "audience": "knowledgeable",
+                "dialect": "american",
+                "domain": "academic",
+                "emotions": [
+                    "neutral",
+                    "respectful",
+                    "analytical"
+                ],
+                "goals": [
+                    "inform",
+                    "describe"
+                ],
+                "emotion": "mild"
+            }
+        },
+        {
+            "files": [
+                "**/README.md"
+            ],
+            "config": {
+                "audience": "knowledgeable",
+                "dialect": "american",
+                "domain": "academic",
+                "emotions": [
+                    "confident",
+                    "analytical"
+                ],
+                "goals": "describe",
+                "emotion": "mild"
+            }
+        }
+    ]
+}
